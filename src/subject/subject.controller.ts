@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import type { InterfacePostSubject, InterfaceSubject } from './subject';
 import { SubjectService } from './subject.service';
+import { InterfaceLevelSubject } from '../level/level';
 
 @Controller('subject')
 export class SubjectController {
@@ -14,6 +15,11 @@ export class SubjectController {
   @Get(':id')
   findOneById(@Param('id') id: string): InterfaceSubject {
     return this.subjectService.findOneById(+id); // cast en number
+  }
+
+  @Get(':name/level')
+  findSubjectAndLevels(@Param('name') name: string): InterfaceLevelSubject[] {
+    return this.subjectService.findSubjectAndLevelsFromName(name);
   }
 
   @Post()

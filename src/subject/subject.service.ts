@@ -1,20 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import type { InterfacePostSubject, InterfaceSubject } from './subject';
-import { SUBJECTS } from './bdd';
+import { BddService } from '../bdd/bdd.service';
+import { InterfaceLevelSubject } from '../level/level';
+import { LevelService } from '../level/level.service';
 
 @Injectable()
 export class SubjectService {
+  constructor(
+    private bdd: BddService,
+    @Inject(forwardRef(() => LevelService))
+    private levelService: LevelService,
+  ) {}
+
   findAll(): InterfaceSubject[] {
-    return SUBJECTS;
+    return this.bdd.get<InterfaceSubject>('subjects');
   }
 
   findOneById(id: number): InterfaceSubject {
-    return <InterfaceSubject>SUBJECTS.find((subject) => subject.id === id);
+    return this.bdd.getById<InterfaceSubject>('subjects', id);
   }
 
   createNewSubject({ name }: InterfacePostSubject): InterfaceSubject[] {
-    const sortedByIdSubjects = SUBJECTS.sort((a, b) => a.id - b.id);
+    const sortedByIdSubjects = this.findAll().sort((a, b) => a.id - b.id);
     const newId = sortedByIdSubjects[sortedByIdSubjects.length - 1].id + 1;
-    return [...SUBJECTS, { id: newId, name: name, levelId: 1 }];
+    return [...this.findAll(), { id: newId, name: name, levelId: 1 }];
+  }
+
+  findSubjectAndLevelsFromName(name: string): InterfaceLevelSubject[] {
+    const subject = this.findAll().find((s) => s.name === name);
+    if (subject === undefined) {
+      return [];
+    }
+    const levels = this.levelService.findAll();
+    const filteredLevels = levels.filter((l) => l.id === subject.levelId);
+
+    return filteredLevels.map<InterfaceLevelSubject>((level) => ({
+      level,
+      subject,
+    }));
   }
 }

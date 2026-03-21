@@ -1,14 +1,22 @@
-import { Injectable } from '@nestjs/common';
-import type { InterfaceLevelSubject } from './level';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import type { InterfaceLevel, InterfaceLevelSubject } from './level';
 import { SubjectService } from '../subject/subject.service';
-import { LEVELS } from './bdd';
+import { BddService } from '../bdd/bdd.service';
 
 @Injectable()
 export class LevelService {
-  constructor(private readonly subjectService: SubjectService) {}
+  constructor(
+    @Inject(forwardRef(() => SubjectService))
+    private readonly subjectService: SubjectService,
+    private bdd: BddService,
+  ) {}
+
+  findAll(): InterfaceLevel[] {
+    return this.bdd.get<InterfaceLevel>('levels');
+  }
 
   findLevelAndSubjectByName(name: string): InterfaceLevelSubject[] {
-    const level = LEVELS.find((l) => l.name === name);
+    const level = this.findAll().find((l) => l.name === name);
 
     if (level === undefined) {
       return [];
