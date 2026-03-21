@@ -1,4 +1,4 @@
-const SUBJECTS = [
+export const SUBJECTS = [
   {
     id: 1,
     name: 'Francais',
@@ -21,7 +21,7 @@ const SUBJECTS = [
   },
 ];
 
-const LEVELS = [
+export const LEVELS = [
   { id: 1, name: 'Primaire' },
   { id: 2, name: 'Collège' },
   { id: 3, name: 'Lycée' },
