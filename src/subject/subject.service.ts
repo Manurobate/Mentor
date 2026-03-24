@@ -3,12 +3,14 @@ import type { InterfacePostSubject, InterfaceSubject } from './subject';
 import { BddService } from '../bdd/bdd.service';
 import { InterfaceLevel, InterfaceLevelSubject } from '../level/level';
 import { TOKEN_LEVELS } from '../bdd/constantes';
+import { ConfigService } from '../config/config.service';
 
 @Injectable()
 export class SubjectService {
   constructor(
     private bdd: BddService,
     @Inject(TOKEN_LEVELS) private bddLevels: InterfaceLevel[],
+    private configService: ConfigService,
   ) {}
 
   findAll(): InterfaceSubject[] {
@@ -38,5 +40,9 @@ export class SubjectService {
       level,
       subject,
     }));
+  }
+
+  findFavorite(): string {
+    return this.configService.get('FAVORITE_SUBJECT');
   }
 }
