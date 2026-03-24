@@ -1,34 +1,37 @@
-import { Inject, Injectable } from '@nestjs/common';
-import type { InterfaceLevel, InterfaceLevelSubject } from './level';
-import { BddService } from '../bdd/bdd.service';
-import { InterfaceSubject } from '../subject/subject';
-import { TOKEN_SUBJECTS } from '../bdd/constantes';
+import { Injectable } from '@nestjs/common';
+import type { InterfaceLevelSubject } from './level';
+import { InjectRepository } from '@nestjs/typeorm';
+import { LevelEntity } from './entities/level.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class LevelService {
   constructor(
-    @Inject(TOKEN_SUBJECTS) private bddSubjects: InterfaceSubject[],
-    private bdd: BddService,
+    @InjectRepository(LevelEntity)
+    private levelRepository: Repository<LevelEntity>,
   ) {}
 
-  findAll(): InterfaceLevel[] {
-    return this.bdd.get<InterfaceLevel>('levels');
+  findAll(): Promise<LevelEntity[]> {
+    return this.levelRepository.find();
   }
 
-  findLevelAndSubjectByName(name: string): InterfaceLevelSubject[] {
-    const level = this.findAll().find((l) => l.name === name);
-
-    if (level === undefined) {
-      return [];
+  async findLevelAndSubjectByName(
+    name: string,
+  ): Promise<InterfaceLevelSubject | null> {
+    const level = await this.levelRepository.findOneBy({ name });
+    if (!level) {
+      return null;
     }
 
-    const filteredSubjects = this.bddSubjects.filter(
-      (subject) => subject.levelId === level.id,
-    );
-
-    return filteredSubjects.map<InterfaceLevelSubject>((subject) => ({
-      subject,
-      level,
-    }));
+    return {
+      subject: {
+        id: level.subject.id,
+        name: level.subject.name,
+      },
+      level: {
+        id: level.id,
+        name: level.name,
+      },
+    };
   }
 }
