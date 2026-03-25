@@ -9,3 +9,8 @@ export type InterfaceLevelSubject = {
   level: InterfaceLevel;
   subject: InterfaceSubject;
 };
+
+export type InterfaceLevelSubjects = {
+  level: InterfaceLevel;
+  subjects: InterfaceSubject[];
+};

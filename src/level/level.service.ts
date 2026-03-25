@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { InterfaceLevelSubject } from './level';
+import type { InterfaceLevelSubjects } from './level';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LevelEntity } from './entities/level.entity';
 import { Repository } from 'typeorm';
@@ -17,24 +17,24 @@ export class LevelService {
 
   async findLevelAndSubjectByName(
     name: string,
-  ): Promise<InterfaceLevelSubject | null> {
+  ): Promise<InterfaceLevelSubjects | null> {
     const level = await this.levelRepository.findOne({
       where: { name },
-      relations: { subject: true },
+      relations: { subjects: true },
     });
     if (!level) {
       return null;
     }
 
     return {
-      subject: {
-        id: level.subject.id,
-        name: level.subject.name,
-      },
       level: {
         id: level.id,
         name: level.name,
       },
+      subjects: level.subjects.map((subject) => ({
+        id: subject.id,
+        name: subject.name,
+      })),
     };
   }
 }

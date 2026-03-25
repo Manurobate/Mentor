@@ -2,7 +2,7 @@ import {
   Column,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { LevelEntity } from '../../level/entities/level.entity';
@@ -15,7 +15,7 @@ export class SubjectEntity {
   @Column()
   name: string;
 
-  @OneToOne(() => LevelEntity, (level) => level.subject)
+  @ManyToOne(() => LevelEntity, (level) => level.subjects)
   @JoinColumn()
   level: LevelEntity;
 }
