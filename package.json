@@ -27,10 +27,12 @@
     "migration:fake-revert": "npm run build && npm run typeorm -- -d dist/database/ormconfig.js migration:revert --fake"
   },
   "dependencies": {
+    "@nestjs/cache-manager": "^3.1.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/typeorm": "^11.0.0",
+    "cache-manager": "^7.2.8",
     "dotenv": "^17.3.1",
     "mariadb": "^3.5.2",
     "mysql2": "^3.20.0",

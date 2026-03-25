@@ -3,16 +3,16 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SubjectModule } from './subject/subject.module';
 import { LevelModule } from './level/level.module';
-import { ConfigModule } from './config/config.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmModuleOptions } from './database/ormconfig';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
     SubjectModule,
     LevelModule,
-    ConfigModule.forRoot({ folder: './config' }),
     TypeOrmModule.forRoot(typeOrmModuleOptions),
+    CacheModule.register(),
   ],
   controllers: [AppController],
   providers: [AppService],

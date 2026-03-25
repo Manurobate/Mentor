@@ -1,21 +1,30 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import type { InterfacePostSubject } from './subject';
 import { InterfaceLevelSubject } from '../level/level';
-import { ConfigService } from '../config/config.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SubjectEntity } from './entities/subject.entity';
 import { Repository } from 'typeorm';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import type { Cache } from 'cache-manager';
 
 @Injectable()
 export class SubjectService {
   constructor(
     @InjectRepository(SubjectEntity)
     private subjectRepository: Repository<SubjectEntity>,
-    private configService: ConfigService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  findAll(): Promise<SubjectEntity[]> {
-    return this.subjectRepository.find();
+  async findAll(): Promise<SubjectEntity[]> {
+    const cachedSubjects =
+      await this.cacheManager.get<SubjectEntity[]>('findAll');
+    if (!cachedSubjects) {
+      const subjects = await this.subjectRepository.find();
+      await this.cacheManager.set('findAll', subjects, 0);
+      return subjects;
+    } else {
+      return cachedSubjects;
+    }
   }
 
   findOneById(id: number): Promise<SubjectEntity | null> {
@@ -55,6 +64,6 @@ export class SubjectService {
   }
 
   findFavorite(): string {
-    return this.configService.get('FAVORITE_SUBJECT');
+    return 'Informatique';
   }
 }
