@@ -18,7 +18,10 @@ export class LevelService {
   async findLevelAndSubjectByName(
     name: string,
   ): Promise<InterfaceLevelSubject | null> {
-    const level = await this.levelRepository.findOneBy({ name });
+    const level = await this.levelRepository.findOne({
+      where: { name },
+      relations: { subject: true },
+    });
     if (!level) {
       return null;
     }
