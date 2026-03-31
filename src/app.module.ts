@@ -6,6 +6,7 @@ import { LevelModule } from './level/level.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmModuleOptions } from './database/ormconfig';
 import { CacheModule } from '@nestjs/cache-manager';
+import { AnnounceModule } from './announce/announce.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { CacheModule } from '@nestjs/cache-manager';
     LevelModule,
     TypeOrmModule.forRoot(typeOrmModuleOptions),
     CacheModule.register(),
+    AnnounceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,10 +1,10 @@
-import { Inject, Injectable } from '@nestjs/common';
-import type { InterfacePostSubject } from './subject';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SubjectEntity } from './entities/subject.entity';
 import { Repository } from 'typeorm';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import type { Cache } from 'cache-manager';
+import { AddSubjectDto } from './interfaces/addSubject.dto';
 
 @Injectable()
 export class SubjectService {
@@ -26,41 +26,35 @@ export class SubjectService {
     }
   }
 
-  findOneById(id: number): Promise<SubjectEntity | null> {
-    return this.subjectRepository.findOneBy({ id });
+  async findOneById(id: number): Promise<SubjectEntity> {
+    const subject = await this.subjectRepository.findOneBy({ id });
+
+    if (!subject) {
+      throw new HttpException(
+        `Subject with id ${id} not Found`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return subject;
   }
 
-  async createNewSubject({
-    name,
-  }: InterfacePostSubject): Promise<SubjectEntity> {
-    const newSubject = new SubjectEntity();
-    newSubject.name = name;
+  async findOneByName(name: string): Promise<SubjectEntity> {
+    const subject = await this.subjectRepository.findOneBy({ name });
 
-    return await this.subjectRepository.save(newSubject);
+    if (!subject) {
+      throw new HttpException(
+        `Subject ${name} not Found`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return subject;
   }
 
-  // async findSubjectAndLevelsFromName(
-  //   name: string,
-  // ): Promise<InterfaceLevelSubject | null> {
-  //   const subject = await this.subjectRepository.findOne({
-  //     where: { name },
-  //     relations: { level: true },
-  //   });
-  //   if (!subject) {
-  //     return null;
-  //   }
-  //
-  //   return {
-  //     subject: {
-  //       id: subject.id,
-  //       name: subject.name,
-  //     },
-  //     level: {
-  //       id: subject.level.id,
-  //       name: subject.level.name,
-  //     },
-  //   };
-  // }
+  async createNewSubject({ name }: AddSubjectDto): Promise<SubjectEntity> {
+    return await this.subjectRepository.save({ name });
+  }
 
   findFavorite(): string {
     return 'Informatique';

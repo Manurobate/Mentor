@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LevelEntity } from './entities/level.entity';
 import { Repository } from 'typeorm';
+import { AddLevelDto } from './interfaces/addLevel.dto';
 
 @Injectable()
 export class LevelService {
@@ -14,26 +15,30 @@ export class LevelService {
     return this.levelRepository.find();
   }
 
-  // async findLevelAndSubjectByName(
-  //   name: string,
-  // ): Promise<InterfaceLevelSubjects | null> {
-  //   const level = await this.levelRepository.findOne({
-  //     where: { name },
-  //     relations: { subjects: true },
-  //   });
-  //   if (!level) {
-  //     return null;
-  //   }
-  //
-  //   return {
-  //     level: {
-  //       id: level.id,
-  //       name: level.name,
-  //     },
-  //     subjects: level.subjects.map((subject) => ({
-  //       id: subject.id,
-  //       name: subject.name,
-  //     })),
-  //   };
-  // }
+  async findOneByName(name: string): Promise<LevelEntity> {
+    const level = await this.levelRepository.findOneBy({ name });
+
+    if (!level) {
+      throw new HttpException(`Level ${name} not Found`, HttpStatus.NOT_FOUND);
+    }
+
+    return level;
+  }
+
+  async findOneById(id: number): Promise<LevelEntity> {
+    const level = await this.levelRepository.findOneBy({ id });
+
+    if (!level) {
+      throw new HttpException(
+        `Level with id ${id} not Found`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return level;
+  }
+
+  async createNewLevel({ name }: AddLevelDto): Promise<LevelEntity> {
+    return await this.levelRepository.save({ name });
+  }
 }
