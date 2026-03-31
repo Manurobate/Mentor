@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { InterfacePostSubject } from './subject';
-import { InterfaceLevelSubject } from '../level/level';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SubjectEntity } from './entities/subject.entity';
 import { Repository } from 'typeorm';
@@ -40,28 +39,28 @@ export class SubjectService {
     return await this.subjectRepository.save(newSubject);
   }
 
-  async findSubjectAndLevelsFromName(
-    name: string,
-  ): Promise<InterfaceLevelSubject | null> {
-    const subject = await this.subjectRepository.findOne({
-      where: { name },
-      relations: { level: true },
-    });
-    if (!subject) {
-      return null;
-    }
-
-    return {
-      subject: {
-        id: subject.id,
-        name: subject.name,
-      },
-      level: {
-        id: subject.level.id,
-        name: subject.level.name,
-      },
-    };
-  }
+  // async findSubjectAndLevelsFromName(
+  //   name: string,
+  // ): Promise<InterfaceLevelSubject | null> {
+  //   const subject = await this.subjectRepository.findOne({
+  //     where: { name },
+  //     relations: { level: true },
+  //   });
+  //   if (!subject) {
+  //     return null;
+  //   }
+  //
+  //   return {
+  //     subject: {
+  //       id: subject.id,
+  //       name: subject.name,
+  //     },
+  //     level: {
+  //       id: subject.level.id,
+  //       name: subject.level.name,
+  //     },
+  //   };
+  // }
 
   findFavorite(): string {
     return 'Informatique';
