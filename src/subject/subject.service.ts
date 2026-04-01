@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import type { Cache } from 'cache-manager';
 import { AddSubjectDto } from './interfaces/addSubject.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class SubjectService {
@@ -12,6 +13,7 @@ export class SubjectService {
     @InjectRepository(SubjectEntity)
     private subjectRepository: Repository<SubjectEntity>,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private configService: ConfigService,
   ) {}
 
   async findAll(): Promise<SubjectEntity[]> {
@@ -57,6 +59,6 @@ export class SubjectService {
   }
 
   findFavorite(): string {
-    return 'Informatique';
+    return <string>this.configService.get('FAVORITE_SUBJECT');
   }
 }

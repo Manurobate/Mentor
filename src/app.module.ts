@@ -7,12 +7,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmModuleOptions } from './database/ormconfig';
 import { CacheModule } from '@nestjs/cache-manager';
 import { AnnounceModule } from './announce/announce.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     SubjectModule,
     LevelModule,
     TypeOrmModule.forRoot(typeOrmModuleOptions),
+    ConfigModule.forRoot({
+      envFilePath: './config/.env',
+      isGlobal: true,
+    }),
     CacheModule.register(),
     AnnounceModule,
   ],
