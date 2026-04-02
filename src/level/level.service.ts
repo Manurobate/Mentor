@@ -19,7 +19,7 @@ export class LevelService {
     const level = await this.levelRepository.findOneBy({ name });
 
     if (!level) {
-      throw new HttpException(`Level ${name} not Found`, HttpStatus.NOT_FOUND);
+      throw new HttpException(`Level ${name} not found`, HttpStatus.NOT_FOUND);
     }
 
     return level;
@@ -30,7 +30,7 @@ export class LevelService {
 
     if (!level) {
       throw new HttpException(
-        `Level with id ${id} not Found`,
+        `Level with id ${id} not found`,
         HttpStatus.NOT_FOUND,
       );
     }

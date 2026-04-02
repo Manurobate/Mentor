@@ -26,7 +26,7 @@ export class LevelController {
   }
 
   @Post()
-  addSubject(@Body() level: AddLevelDto): Promise<LevelEntity> {
+  addLevel(@Body() level: AddLevelDto): Promise<LevelEntity> {
     return this.levelService.createNewLevel(level);
   }
 }
