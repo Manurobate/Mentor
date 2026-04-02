@@ -33,7 +33,7 @@ export class SubjectService {
 
     if (!subject) {
       throw new HttpException(
-        `Subject with id ${id} not Found`,
+        `Subject with id ${id} not found`,
         HttpStatus.NOT_FOUND,
       );
     }
@@ -46,7 +46,7 @@ export class SubjectService {
 
     if (!subject) {
       throw new HttpException(
-        `Subject ${name} not Found`,
+        `Subject ${name} not found`,
         HttpStatus.NOT_FOUND,
       );
     }
