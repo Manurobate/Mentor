@@ -23,21 +23,7 @@ export class AnnounceService {
     subjectName: string;
   }): Promise<AnnounceEntity> {
     const level = await this.levelService.findOneByName(levelName);
-    if (!level) {
-      throw new HttpException(
-        `Level ${levelName} not found`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
     const subject = await this.subjectService.findOneByName(subjectName);
-    if (!subject) {
-      throw new HttpException(
-        `Subject ${subjectName} not found`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
     const announce = await this.announceRepository.findOneBy({
       level,
       subject,
