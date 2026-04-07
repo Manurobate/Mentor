@@ -8,6 +8,8 @@ import { typeOrmModuleOptions } from './database/ormconfig';
 import { CacheModule } from '@nestjs/cache-manager';
 import { AnnounceModule } from './announce/announce.module';
 import { ConfigModule } from '@nestjs/config';
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { ConfigModule } from '@nestjs/config';
     }),
     CacheModule.register(),
     AnnounceModule,
+    UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
