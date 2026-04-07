@@ -20,6 +20,7 @@ export class UserService {
     lastname,
     email,
     password,
+    role,
   }: CreateUserDto): Promise<UserEntity> {
     try {
       const passwordHash = await bcrypt.hash(password, 10);
@@ -29,6 +30,7 @@ export class UserService {
         lastname,
         email,
         passwordHash,
+        role,
       });
     } catch (error) {
       if (error instanceof QueryFailedError) {
